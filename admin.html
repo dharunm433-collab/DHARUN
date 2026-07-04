@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DHTS.studio — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#06060A; --ink2:#0D0D16; --ink3:#131320;
+  --cyan:#00E5FF; --hi:#F0F0FF; --mid:#7A7A9A; --lo:#3A3A54;
+  --card:rgba(255,255,255,0.03); --border:rgba(255,255,255,0.09);
+  --err:#ff6b6b;
+}
+body{background:var(--ink);color:var(--hi);font-family:'Inter',sans-serif;min-height:100vh}
+h1,h2,h3,.mono{font-family:'Space Grotesk',sans-serif}
+a{color:inherit}
+
+/* login */
+#loginView{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem}
+.login-box{width:100%;max-width:340px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:2.25rem}
+.login-box h1{font-size:1.3rem;margin-bottom:0.3rem}
+.login-box p{color:var(--mid);font-size:0.82rem;margin-bottom:1.75rem}
+label{display:block;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid);margin-bottom:0.4rem;margin-top:1rem}
+input,textarea,select{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--lo);border-radius:5px;padding:0.65rem 0.8rem;color:var(--hi);font-size:0.88rem;font-family:'Inter',sans-serif;outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--cyan)}
+button{cursor:pointer;font-family:'Space Grotesk',sans-serif}
+.btn{background:var(--cyan);color:var(--ink);font-weight:600;font-size:0.82rem;letter-spacing:0.03em;padding:0.65rem 1.3rem;border:none;border-radius:5px;transition:opacity .2s}
+.btn:hover{opacity:0.85}
+.btn-outline{background:transparent;color:var(--hi);border:1px solid var(--lo);font-weight:500;font-size:0.8rem;padding:0.5rem 1rem;border-radius:5px}
+.btn-outline:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn-danger{background:transparent;color:var(--err);border:1px solid rgba(255,107,107,0.35);font-weight:500;font-size:0.75rem;padding:0.35rem 0.7rem;border-radius:5px}
+.btn-danger:hover{background:rgba(255,107,107,0.08)}
+.err-msg{color:var(--err);font-size:0.8rem;margin-top:0.75rem;min-height:1.1em}
+.ok-msg{color:var(--cyan);font-size:0.8rem;margin-top:0.75rem;min-height:1.1em}
+
+/* layout */
+#appView{display:none}
+.topbar{height:60px;border-bottom:1px solid var(--lo);display:flex;align-items:center;justify-content:space-between;padding:0 1.75rem;position:sticky;top:0;background:rgba(6,6,10,0.92);backdrop-filter:blur(16px);z-index:10}
+.brand{font-weight:700;font-size:1.05rem}
+.brand span{color:var(--cyan)}
+.topbar-right{display:flex;align-items:center;gap:1rem}
+.who{font-size:0.78rem;color:var(--mid)}
+.tabs{display:flex;gap:0.4rem;padding:1.25rem 1.75rem 0;flex-wrap:wrap}
+.tab{background:transparent;border:1px solid var(--lo);color:var(--mid);font-size:0.78rem;letter-spacing:0.04em;padding:0.5rem 1rem;border-radius:6px 6px 0 0;border-bottom:none}
+.tab.active{color:var(--hi);border-color:var(--cyan);background:var(--card)}
+.panel{padding:1.5rem 1.75rem 3rem;max-width:1000px}
+.panel-section{display:none}
+.panel-section.active{display:block}
+.card-row{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.1rem 1.25rem;margin-bottom:0.9rem}
+.card-row-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
+.card-row h3{font-size:0.95rem;margin-bottom:0.2rem}
+.card-row .meta{font-size:0.75rem;color:var(--mid)}
+.card-actions{display:flex;gap:0.5rem;flex-shrink:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem}
+.field{margin-bottom:0}
+.add-form{background:var(--ink2);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin-bottom:1.5rem}
+.add-form h3{font-size:0.9rem;margin-bottom:1rem;color:var(--cyan)}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.section-head h2{font-size:1.2rem}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:0.65rem 0.5rem;font-size:0.82rem;border-bottom:1px solid var(--border)}
+th{color:var(--mid);font-weight:500;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em}
+td.msg-cell{max-width:280px;color:var(--mid)}
+.badge{font-size:0.68rem;padding:0.15rem 0.5rem;border-radius:3px;background:rgba(0,229,255,0.1);color:var(--cyan);letter-spacing:0.05em;text-transform:uppercase}
+.empty{color:var(--mid);font-size:0.85rem;padding:1.5rem 0;text-align:center}
+.stars{color:#FFB830}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginView">
+  <div class="login-box">
+    <h1>DHTS<span style="color:var(--cyan)">.</span>studio</h1>
+    <p>Admin sign in</p>
+    <form id="loginForm">
+      <label>Username</label>
+      <input type="text" id="loginUser" autocomplete="username" required>
+      <label>Password</label>
+      <input type="password" id="loginPass" autocomplete="current-password" required>
+      <button class="btn" type="submit" style="width:100%;margin-top:1.5rem">Sign in</button>
+      <div class="err-msg" id="loginErr"></div>
+    </form>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appView">
+  <div class="topbar">
+    <div class="brand">DHTS<span>.</span>studio — admin</div>
+    <div class="topbar-right">
+      <span class="who" id="whoLabel"></span>
+      <button class="btn-outline" id="logoutBtn">Log out</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="leads">Leads</button>
+    <button class="tab" data-tab="services">Services</button>
+    <button class="tab" data-tab="projects">Work</button>
+    <button class="tab" data-tab="testimonials">Testimonials</button>
+    <button class="tab" data-tab="stats">Stats</button>
+    <button class="tab" data-tab="account">Account</button>
+  </div>
+
+  <div class="panel">
+
+    <!-- LEADS -->
+    <div class="panel-section active" id="tab-leads">
+      <div class="section-head"><h2>Contact submissions</h2></div>
+      <table id="leadsTable">
+        <thead><tr><th>Email</th><th>Message</th><th>Status</th><th>Received</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="empty" id="leadsEmpty" style="display:none">No submissions yet.</div>
+    </div>
+
+    <!-- SERVICES -->
+    <div class="panel-section" id="tab-services">
+      <div class="section-head"><h2>Services</h2></div>
+      <div class="add-form">
+        <h3>Add service</h3>
+        <div class="grid2">
+          <div class="field"><label>Number</label><input id="svc_num" placeholder="08"></div>
+          <div class="field"><label>Icon (emoji)</label><input id="svc_icon" placeholder="✨"></div>
+        </div>
+        <div class="field"><label>Title</label><input id="svc_title"></div>
+        <div class="field"><label>Description</label><textarea id="svc_description" rows="2"></textarea></div>
+        <div class="field"><label>Tags (comma separated)</label><input id="svc_tags" placeholder="Tag1, Tag2"></div>
+        <button class="btn" style="margin-top:1rem" onclick="createItem('services')">Add service</button>
+      </div>
+      <div id="list-services"></div>
+    </div>
+
+    <!-- PROJECTS -->
+    <div class="panel-section" id="tab-projects">
+      <div class="section-head"><h2>Work / Projects</h2></div>
+      <div class="add-form">
+        <h3>Add project</h3>
+        <div class="grid2">
+          <div class="field"><label>Category</label><input id="proj_category" placeholder="Web Development"></div>
+          <div class="field"><label>Name</label><input id="proj_name" placeholder="Project name"></div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label>Gradient class</label>
+            <select id="proj_gradient_class">
+              <option value="wk-g1">Cyan (wk-g1)</option>
+              <option value="wk-g2">Gold (wk-g2)</option>
+              <option value="wk-g3">Purple (wk-g3)</option>
+              <option value="wk-g4">Soft cyan (wk-g4)</option>
+            </select>
+          </div>
+          <div class="field"><label>Shape style (CSS)</label><input id="proj_shape_style" placeholder="border-radius:50%"></div>
+        </div>
+        <button class="btn" style="margin-top:1rem" onclick="createItem('projects')">Add project</button>
+      </div>
+      <div id="list-projects"></div>
+    </div>
+
+    <!-- TESTIMONIALS -->
+    <div class="panel-section" id="tab-testimonials">
+      <div class="section-head"><h2>Testimonials</h2></div>
+      <div class="add-form">
+        <h3>Add testimonial</h3>
+        <div class="field"><label>Stars (1-5)</label><input id="testi_stars" type="number" min="1" max="5" value="5"></div>
+        <div class="field"><label>Quote</label><textarea id="testi_quote" rows="2"></textarea></div>
+        <div class="field"><label>Author</label><input id="testi_author" placeholder="Name, Title — Company"></div>
+        <button class="btn" style="margin-top:1rem" onclick="createItem('testimonials')">Add testimonial</button>
+      </div>
+      <div id="list-testimonials"></div>
+    </div>
+
+    <!-- STATS -->
+    <div class="panel-section" id="tab-stats">
+      <div class="section-head"><h2>Stats strip</h2></div>
+      <div class="add-form">
+        <h3>Add stat</h3>
+        <div class="grid2">
+          <div class="field"><label>Value</label><input id="stat_value" placeholder="120+"></div>
+          <div class="field"><label>Label</label><input id="stat_label" placeholder="Projects delivered"></div>
+        </div>
+        <button class="btn" style="margin-top:1rem" onclick="createItem('stats')">Add stat</button>
+      </div>
+      <div id="list-stats"></div>
+    </div>
+
+    <!-- ACCOUNT -->
+    <div class="panel-section" id="tab-account">
+      <div class="section-head"><h2>Account</h2></div>
+      <div class="add-form" style="max-width:400px">
+        <h3>Change password</h3>
+        <label>Current password</label><input type="password" id="curPass">
+        <label>New password</label><input type="password" id="newPass">
+        <button class="btn" style="margin-top:1.25rem" onclick="changePassword()">Update password</button>
+        <div class="ok-msg" id="pwMsg"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const $ = sel => document.querySelector(sel);
+const $$ = sel => document.querySelectorAll(sel);
+
+async function api(path, opts={}){
+  const res = await fetch(path, {
+    headers: {'Content-Type':'application/json'},
+    credentials: 'same-origin',
+    ...opts,
+  });
+  let data = null;
+  try{ data = await res.json(); }catch{}
+  if(!res.ok) throw new Error((data && data.error) || 'Request failed');
+  return data;
+}
+
+// ---- auth ----
+async function checkAuth(){
+  const me = await api('/api/auth/me');
+  if(me.authenticated){
+    $('#loginView').style.display='none';
+    $('#appView').style.display='block';
+    $('#whoLabel').textContent = 'Signed in as ' + me.username;
+    loadAll();
+  } else {
+    $('#loginView').style.display='flex';
+    $('#appView').style.display='none';
+  }
+}
+
+$('#loginForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  $('#loginErr').textContent='';
+  try{
+    await api('/api/auth/login', {method:'POST', body: JSON.stringify({
+      username: $('#loginUser').value.trim(),
+      password: $('#loginPass').value,
+    })});
+    checkAuth();
+  }catch(err){
+    $('#loginErr').textContent = err.message;
+  }
+});
+
+$('#logoutBtn').addEventListener('click', async ()=>{
+  await api('/api/auth/logout', {method:'POST'});
+  checkAuth();
+});
+
+async function changePassword(){
+  const msg = $('#pwMsg');
+  msg.style.color = 'var(--cyan)';
+  msg.textContent = '';
+  try{
+    await api('/api/auth/change-password', {method:'POST', body: JSON.stringify({
+      currentPassword: $('#curPass').value,
+      newPassword: $('#newPass').value,
+    })});
+    msg.textContent = 'Password updated.';
+    $('#curPass').value=''; $('#newPass').value='';
+  }catch(err){
+    msg.style.color = 'var(--err)';
+    msg.textContent = err.message;
+  }
+}
+
+// ---- tabs ----
+$$('.tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    $$('.tab').forEach(t=>t.classList.remove('active'));
+    $$('.panel-section').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    $('#tab-'+tab.dataset.tab).classList.add('active');
+  });
+});
+
+// ---- generic CRUD lists ----
+async function loadAll(){
+  loadLeads();
+  loadList('services');
+  loadList('projects');
+  loadList('testimonials');
+  loadList('stats');
+}
+
+async function loadLeads(){
+  const rows = await api('/api/admin/leads');
+  const tbody = $('#leadsTable tbody');
+  tbody.innerHTML='';
+  $('#leadsEmpty').style.display = rows.length ? 'none' : 'block';
+  rows.forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${escapeHtml(r.email)}</td>
+      <td class="msg-cell">${escapeHtml(r.message || '—')}</td>
+      <td><span class="badge">${escapeHtml(r.status)}</span></td>
+      <td>${new Date(r.created_at).toLocaleString()}</td>
+      <td><button class="btn-danger" onclick="deleteLead(${r.id})">Delete</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+async function deleteLead(id){
+  if(!confirm('Delete this submission?')) return;
+  await api('/api/admin/leads/'+id, {method:'DELETE'});
+  loadLeads();
+}
+
+const renderers = {
+  services: item => `
+    <div class="card-row-head">
+      <div>
+        <h3>${item.num ? item.num+'. ' : ''}${escapeHtml(item.icon||'')} ${escapeHtml(item.title||'')}</h3>
+        <div class="meta">${escapeHtml(item.description||'')}</div>
+        <div class="meta" style="margin-top:0.3rem">${(item.tags||[]).map(t=>`<span class="badge" style="margin-right:0.3rem">${escapeHtml(t)}</span>`).join('')}</div>
+      </div>
+      <div class="card-actions"><button class="btn-danger" onclick="deleteItem('services', ${item.id})">Delete</button></div>
+    </div>`,
+  projects: item => `
+    <div class="card-row-head">
+      <div>
+        <h3>${escapeHtml(item.name||'')}</h3>
+        <div class="meta">${escapeHtml(item.category||'')} · ${escapeHtml(item.gradient_class||'')}</div>
+      </div>
+      <div class="card-actions"><button class="btn-danger" onclick="deleteItem('projects', ${item.id})">Delete</button></div>
+    </div>`,
+  testimonials: item => `
+    <div class="card-row-head">
+      <div>
+        <div class="stars">${'★'.repeat(item.stars||5)}</div>
+        <h3 style="margin-top:0.4rem;font-size:0.9rem;font-weight:400">"${escapeHtml(item.quote||'')}"</h3>
+        <div class="meta" style="margin-top:0.3rem">— ${escapeHtml(item.author||'')}</div>
+      </div>
+      <div class="card-actions"><button class="btn-danger" onclick="deleteItem('testimonials', ${item.id})">Delete</button></div>
+    </div>`,
+  stats: item => `
+    <div class="card-row-head">
+      <div><h3>${escapeHtml(item.value||'')}</h3><div class="meta">${escapeHtml(item.label||'')}</div></div>
+      <div class="card-actions"><button class="btn-danger" onclick="deleteItem('stats', ${item.id})">Delete</button></div>
+    </div>`,
+};
+
+async function loadList(table){
+  const items = await api('/api/admin/'+table);
+  const container = $('#list-'+table);
+  if(!items.length){ container.innerHTML = '<div class="empty">Nothing here yet.</div>'; return; }
+  container.innerHTML = items.map(item => `<div class="card-row">${renderers[table](item)}</div>`).join('');
+}
+
+async function createItem(table){
+  let body = {};
+  if(table === 'services'){
+    body = {
+      num: $('#svc_num').value, icon: $('#svc_icon').value, title: $('#svc_title').value,
+      description: $('#svc_description').value,
+      tags: $('#svc_tags').value.split(',').map(s=>s.trim()).filter(Boolean),
+      sort_order: 999,
+    };
+  } else if(table === 'projects'){
+    body = {
+      category: $('#proj_category').value, name: $('#proj_name').value,
+      gradient_class: $('#proj_gradient_class').value, shape_style: $('#proj_shape_style').value,
+      sort_order: 999,
+    };
+  } else if(table === 'testimonials'){
+    body = {
+      stars: Number($('#testi_stars').value) || 5,
+      quote: $('#testi_quote').value, author: $('#testi_author').value,
+      sort_order: 999,
+    };
+  } else if(table === 'stats'){
+    body = { value: $('#stat_value').value, label: $('#stat_label').value, sort_order: 999 };
+  }
+  await api('/api/admin/'+table, {method:'POST', body: JSON.stringify(body)});
+  clearForm(table);
+  loadList(table);
+}
+
+function clearForm(table){
+  if(table==='services'){ ['svc_num','svc_icon','svc_title','svc_description','svc_tags'].forEach(id=>$('#'+id).value=''); }
+  if(table==='projects'){ ['proj_category','proj_name','proj_shape_style'].forEach(id=>$('#'+id).value=''); }
+  if(table==='testimonials'){ $('#testi_quote').value=''; $('#testi_author').value=''; $('#testi_stars').value=5; }
+  if(table==='stats'){ $('#stat_value').value=''; $('#stat_label').value=''; }
+}
+
+async function deleteItem(table, id){
+  if(!confirm('Delete this item?')) return;
+  await api('/api/admin/'+table+'/'+id, {method:'DELETE'});
+  loadList(table);
+}
+
+function escapeHtml(str){
+  return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+checkAuth();
+</script>
+</body>
+</html>
