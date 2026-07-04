@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DHTS.studio — Creative Digital Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#06060A;
+  --ink2:#0D0D16;
+  --ink3:#131320;
+  --cyan:#00E5FF;
+  --cyan2:rgba(0,229,255,0.08);
+  --cyan3:rgba(0,229,255,0.18);
+  --gold:#FFB830;
+  --hi:#F0F0FF;
+  --mid:#7A7A9A;
+  --lo:#3A3A54;
+  --card:rgba(255,255,255,0.03);
+  --card-border:rgba(255,255,255,0.07);
+}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--hi);font-family:'Inter',sans-serif;overflow-x:hidden;line-height:1.6}
+a{text-decoration:none;color:inherit}
+
+/* NAV */
+.nav{padding:0 2.5rem;height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--lo);position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,6,10,0.88);backdrop-filter:blur(24px)}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.15rem;letter-spacing:0.01em;display:flex;align-items:center;gap:2px}
+.logo-dot{color:var(--cyan)}
+.logo-studio{color:var(--mid);font-weight:400;font-size:0.9rem;margin-left:1px}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-size:0.78rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--mid);transition:color .25s}
+.nav-links a:hover{color:var(--hi)}
+.nav-contact{background:var(--cyan);color:var(--ink);font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.75rem;letter-spacing:0.08em;text-transform:uppercase;padding:0.5rem 1.25rem;border:none;border-radius:4px;cursor:pointer;transition:opacity .2s}
+.nav-contact:hover{opacity:0.85}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 4rem;position:relative;overflow:hidden}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(0,229,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,0.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 60% at 50% 50%,black,transparent);-webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 50%,black,transparent)}
+.hero-tag{font-size:0.68rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--cyan);border:1px solid rgba(0,229,255,0.3);padding:0.35rem 1rem;border-radius:2rem;margin-bottom:2rem;display:inline-block;opacity:0;animation:fUp .6s .2s forwards}
+.hero-h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.8rem,8vw,6.5rem);font-weight:700;line-height:1.0;letter-spacing:-0.02em;margin-bottom:1rem;opacity:0;animation:fUp .6s .4s forwards}
+.hero-h1 .static{display:block;color:var(--hi)}
+.hero-h1 .dynamic{display:block;color:var(--cyan);min-height:1.1em}
+.cursor{display:inline-block;width:3px;height:0.85em;background:var(--cyan);vertical-align:middle;margin-left:4px;animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.hero-sub{font-size:1rem;color:var(--mid);max-width:500px;margin:0 auto 2.5rem;font-weight:300;opacity:0;animation:fUp .6s .6s forwards;line-height:1.75}
+.hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;opacity:0;animation:fUp .6s .8s forwards}
+.btn-c{background:var(--cyan);color:var(--ink);font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.82rem;letter-spacing:0.06em;padding:0.8rem 2rem;border:none;border-radius:4px;cursor:pointer;text-transform:uppercase;transition:opacity .2s}
+.btn-c:hover{opacity:0.85}
+.btn-o{background:transparent;color:var(--hi);font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:0.82rem;letter-spacing:0.06em;padding:0.8rem 2rem;border:1px solid var(--lo);border-radius:4px;cursor:pointer;text-transform:uppercase;transition:border-color .2s,color .2s}
+.btn-o:hover{border-color:var(--cyan);color:var(--cyan)}
+.hero-scroll{margin-top:4rem;opacity:0;animation:fUp .6s 1.1s forwards;display:flex;align-items:center;gap:0.75rem}
+.scroll-pill{width:1px;height:40px;background:linear-gradient(var(--cyan),transparent);display:block}
+.scroll-lbl{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--lo)}
+
+/* TICKER */
+.ticker-wrap{background:var(--cyan);padding:0.6rem 0;overflow:hidden}
+.ticker-track{display:flex;gap:0;white-space:nowrap;animation:tick 22s linear infinite}
+.ticker-item{font-family:'Space Grotesk',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink);padding:0 2rem}
+.ticker-sep{color:rgba(6,6,10,0.35)}
+
+/* SECTION BASE */
+.section{padding:5.5rem 2.5rem;max-width:1200px;margin:0 auto}
+.sec-label{font-size:0.65rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--cyan);margin-bottom:0.75rem}
+.sec-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,4.5vw,3.2rem);font-weight:700;letter-spacing:-0.02em;line-height:1.1;margin-bottom:3.5rem;color:var(--hi)}
+.sec-title span{color:var(--mid);font-weight:300}
+
+/* SERVICES */
+.services-wrap{background:var(--ink2);border-top:1px solid var(--lo);border-bottom:1px solid var(--lo)}
+.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1px;background:var(--lo)}
+.svc-card{background:var(--ink2);padding:2rem 1.75rem;position:relative;overflow:hidden;transition:background .3s;cursor:default}
+.svc-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--cyan);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.4,0,.2,1)}
+.svc-card:hover{background:var(--ink3)}
+.svc-card:hover::after{transform:scaleX(1)}
+.svc-num{font-family:'Space Grotesk',sans-serif;font-size:0.65rem;letter-spacing:0.2em;color:var(--lo);margin-bottom:1.25rem;font-weight:500}
+.svc-icon{font-size:1.6rem;margin-bottom:1.25rem;display:block}
+.svc-title{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:600;color:var(--hi);margin-bottom:0.6rem;letter-spacing:-0.01em}
+.svc-desc{font-size:0.83rem;color:var(--mid);line-height:1.7;font-weight:300}
+.svc-tags{margin-top:1.2rem;display:flex;flex-wrap:wrap;gap:0.4rem}
+.tag{font-size:0.65rem;letter-spacing:0.08em;padding:0.2rem 0.55rem;border-radius:2px;background:rgba(0,229,255,0.07);color:rgba(0,229,255,0.6);border:1px solid rgba(0,229,255,0.12);text-transform:uppercase}
+
+/* PROCESS */
+.process-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem}
+.proc-card{border:1px solid var(--card-border);border-radius:8px;padding:1.75rem 1.5rem;background:var(--card);position:relative;transition:border-color .3s}
+.proc-card:hover{border-color:rgba(0,229,255,0.2)}
+.proc-num{font-family:'Space Grotesk',sans-serif;font-size:2.5rem;font-weight:700;color:var(--lo);line-height:1;margin-bottom:1rem;letter-spacing:-0.04em;transition:color .3s}
+.proc-card:hover .proc-num{color:rgba(0,229,255,0.25)}
+.proc-title{font-family:'Space Grotesk',sans-serif;font-size:0.95rem;font-weight:600;color:var(--hi);margin-bottom:0.5rem}
+.proc-desc{font-size:0.8rem;color:var(--mid);line-height:1.7;font-weight:300}
+
+/* STATS */
+.stats-strip{background:var(--ink2);border-top:1px solid var(--lo);border-bottom:1px solid var(--lo);padding:3rem 2.5rem}
+.stats-inner{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;text-align:center}
+.form-msg{font-size:0.8rem;margin-top:0.9rem;min-height:1.2em}
+.form-msg.ok{color:var(--cyan)}
+.form-msg.err{color:#ff6b6b}
+.cf-textarea{width:100%;min-width:200px;background:rgba(255,255,255,0.04);border:1px solid var(--lo);border-radius:4px;padding:0.75rem 1rem;color:var(--hi);font-size:0.85rem;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;resize:vertical;min-height:70px}
+.cf-textarea::placeholder{color:var(--lo)}
+.cf-textarea:focus{border-color:var(--cyan)}
+.stat-n{font-family:'Space Grotesk',sans-serif;font-size:3rem;font-weight:700;color:var(--cyan);letter-spacing:-0.04em;line-height:1}
+.stat-l{font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);margin-top:0.4rem}
+
+/* WORK */
+.work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.work-card{border-radius:8px;overflow:hidden;border:1px solid var(--card-border);background:var(--ink3);position:relative;aspect-ratio:4/3;cursor:pointer;transition:transform .3s,border-color .3s}
+.work-card:hover{transform:translateY(-4px);border-color:rgba(0,229,255,0.25)}
+.work-card:first-child{grid-column:span 2;aspect-ratio:16/9}
+.wk-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.wk-g1{background:radial-gradient(ellipse at 40% 40%,rgba(0,229,255,0.18),rgba(6,6,10,0.95))}
+.wk-g2{background:radial-gradient(ellipse at 60% 40%,rgba(255,184,48,0.18),rgba(6,6,10,0.95))}
+.wk-g3{background:radial-gradient(ellipse at 50% 60%,rgba(123,94,248,0.2),rgba(6,6,10,0.95))}
+.wk-g4{background:radial-gradient(ellipse at 40% 50%,rgba(0,229,255,0.12),rgba(6,6,10,0.95))}
+.wk-shape{width:60px;height:60px;border:1px solid rgba(255,255,255,0.06);border-radius:50%}
+.wk-info{position:absolute;bottom:0;left:0;right:0;padding:1rem 1.25rem;background:linear-gradient(transparent,rgba(6,6,10,0.97))}
+.wk-cat{font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--cyan);margin-bottom:0.2rem}
+.wk-name{font-family:'Space Grotesk',sans-serif;font-size:0.92rem;font-weight:600;color:var(--hi)}
+
+/* TESTIMONIAL */
+.testi-wrap{padding:4rem 2.5rem;border-top:1px solid var(--lo);text-align:center}
+.testi-inner{max-width:680px;margin:0 auto}
+.testi-quote{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:400;color:var(--hi);line-height:1.65;margin-bottom:1.75rem;font-style:italic;opacity:0.9}
+.testi-author{font-size:0.75rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--mid)}
+.testi-stars{color:var(--gold);letter-spacing:0.1rem;font-size:0.85rem;margin-bottom:1.25rem}
+
+/* CONTACT */
+.contact-wrap{padding:5rem 2.5rem;background:var(--ink2);border-top:1px solid var(--lo);text-align:center}
+.contact-inner{max-width:600px;margin:0 auto}
+.contact-inner h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:700;letter-spacing:-0.03em;line-height:1;margin-bottom:1rem}
+.contact-inner h2 .c{color:var(--cyan)}
+.contact-inner p{color:var(--mid);margin-bottom:2rem;font-size:0.9rem;font-weight:300;line-height:1.75}
+.contact-form{display:flex;gap:0.75rem;max-width:420px;margin:0 auto;flex-wrap:wrap}
+.cf-input{flex:1;min-width:200px;background:rgba(255,255,255,0.04);border:1px solid var(--lo);border-radius:4px;padding:0.75rem 1rem;color:var(--hi);font-size:0.85rem;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+.cf-input::placeholder{color:var(--lo)}
+.cf-input:focus{border-color:var(--cyan)}
+.contact-links{display:flex;gap:2rem;justify-content:center;margin-top:2.5rem;flex-wrap:wrap}
+.contact-links a{font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);border-bottom:1px solid var(--lo);padding-bottom:2px;transition:color .2s,border-color .2s}
+.contact-links a:hover{color:var(--cyan);border-color:var(--cyan)}
+
+/* FOOTER */
+footer{padding:2rem 2.5rem;border-top:1px solid var(--lo);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1rem;color:var(--mid)}
+.footer-logo span{color:var(--cyan)}
+.footer-copy{font-size:0.7rem;color:var(--lo)}
+.footer-soc{display:flex;gap:1.5rem}
+.footer-soc a{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--lo);transition:color .2s;text-decoration:none}
+.footer-soc a:hover{color:var(--cyan)}
+
+/* ANIMATIONS */
+@keyframes fUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .stats-inner{grid-template-columns:repeat(2,1fr)}
+  .work-grid{grid-template-columns:1fr}
+  .work-card:first-child{grid-column:span 1;aspect-ratio:16/9}
+  footer{flex-direction:column;text-align:center}
+  .hero-h1{font-size:2.8rem}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="logo">DHTS<span class="logo-dot">.</span><span class="logo-studio">studio</span></div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-contact">Start a project</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="grid-bg"></div>
+  <span class="hero-tag">Creative Digital Studio</span>
+  <h1 class="hero-h1">
+    <span class="static">We craft</span>
+    <span class="dynamic"><span id="typeTarget"></span><span class="cursor"></span></span>
+  </h1>
+  <p class="hero-sub">DHTS.studio blends strategy, design, and technology to grow brands across every screen and platform.</p>
+  <div class="hero-ctas">
+    <button class="btn-c" onclick="document.getElementById('work').scrollIntoView({behavior:'smooth'})">View our work</button>
+    <button class="btn-o" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Talk to us</button>
+  </div>
+  <div class="hero-scroll">
+    <span class="scroll-pill"></span>
+    <span class="scroll-lbl">Scroll to explore</span>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="ticker-item">Web Development <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Social Media Management <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Videography <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Photography <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Video Editing <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Photo Editing <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Logo Design <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Web Development <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Social Media Management <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Videography <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Photography <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Video Editing <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Photo Editing <span class="ticker-sep">✦</span></span>
+    <span class="ticker-item">Logo Design <span class="ticker-sep">✦</span></span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<div class="services-wrap" id="services">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="padding:3rem 2.5rem 0">
+      <p class="sec-label reveal">What we do</p>
+      <h2 class="sec-title reveal">Full-spectrum <span>creative services</span></h2>
+    </div>
+    <div class="services-grid" id="servicesGrid"></div>
+  </div>
+</div>
+
+<!-- PROCESS -->
+<div class="section" id="process">
+  <p class="sec-label reveal">How we work</p>
+  <h2 class="sec-title reveal">Our process</h2>
+  <div class="process-grid">
+    <div class="proc-card reveal">
+      <div class="proc-num">01</div>
+      <div class="proc-title">Discovery</div>
+      <p class="proc-desc">We dig into your brand, goals, and audience before a single pixel gets made.</p>
+    </div>
+    <div class="proc-card reveal" style="transition-delay:.08s">
+      <div class="proc-num">02</div>
+      <div class="proc-title">Strategy</div>
+      <p class="proc-desc">Content strategy, platform selection, messaging framework, and creative direction.</p>
+    </div>
+    <div class="proc-card reveal" style="transition-delay:.16s">
+      <div class="proc-num">03</div>
+      <div class="proc-title">Create</div>
+      <p class="proc-desc">Shoot, design, code, or edit — we execute with precision, speed, and craft.</p>
+    </div>
+    <div class="proc-card reveal" style="transition-delay:.24s">
+      <div class="proc-num">04</div>
+      <div class="proc-title">Deliver</div>
+      <p class="proc-desc">Review rounds, final delivery, and continued support to keep your brand moving.</p>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stats-inner" id="statsInner"></div>
+</div>
+
+<!-- WORK -->
+<div class="section" id="work" style="padding-bottom:2rem">
+  <p class="sec-label reveal">Selected work</p>
+  <h2 class="sec-title reveal">Recent projects</h2>
+  <div class="work-grid" id="workGrid"></div>
+</div>
+
+<!-- TESTIMONIAL -->
+<div class="testi-wrap">
+  <div class="testi-inner" id="testiInner"></div>
+</div>
+
+<!-- CONTACT -->
+<div class="contact-wrap" id="contact">
+  <div class="contact-inner">
+    <p class="sec-label reveal">Get in touch</p>
+    <h2 class="reveal">Let's build<br>something <span class="c">great</span></h2>
+    <p class="reveal" style="margin-top:1rem">Tell us what you need. We'll come back within 24 hours with ideas, not a sales pitch.</p>
+    <form class="contact-form reveal" id="contactForm" style="flex-direction:column">
+      <input class="cf-input" type="email" id="cfEmail" placeholder="your@email.com" required>
+      <textarea class="cf-textarea" id="cfMessage" placeholder="Tell us a bit about your project (optional)"></textarea>
+      <button class="btn-c" type="submit" style="border-radius:4px;white-space:nowrap;width:100%">Send message</button>
+      <div class="form-msg" id="cfMsg"></div>
+    </form>
+    <div class="contact-links reveal">
+      <a href="#">dhts.studio</a>
+      <a href="#">Instagram</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">WhatsApp</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">DHTS<span>.</span>studio</div>
+  <div class="footer-soc">
+    <a href="#">Instagram</a>
+    <a href="#">LinkedIn</a>
+    <a href="#">Behance</a>
+  </div>
+  <div class="footer-copy">© 2026 DHTS.studio — All rights reserved</div>
+</footer>
+
+<script>
+const words = ["stunning websites","viral social content","cinematic videos","striking photography","slick video edits","flawless photo edits","iconic brand logos"];
+let wi=0,ci=0,deleting=false;
+const el=document.getElementById('typeTarget');
+function type(){
+  const w=words[wi];
+  if(!deleting){
+    el.textContent=w.slice(0,ci+1);ci++;
+    if(ci===w.length){deleting=true;setTimeout(type,1800);return}
+  }else{
+    el.textContent=w.slice(0,ci-1);ci--;
+    if(ci===0){deleting=false;wi=(wi+1)%words.length}
+  }
+  setTimeout(type,deleting?45:85);
+}
+type();
+
+function initReveals(){
+  const reveals=document.querySelectorAll('.reveal');
+  const obs=new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target)}
+    });
+  },{threshold:0.1});
+  reveals.forEach(r=>obs.observe(r));
+}
+initReveals();
+
+// ---- dynamic content from backend ----
+async function loadContent(){
+  try{
+    const res = await fetch('/api/content');
+    if(!res.ok) throw new Error('failed');
+    const data = await res.json();
+
+    // Services
+    const svcGrid = document.getElementById('servicesGrid');
+    svcGrid.innerHTML = data.services.map((s,i)=>`
+      <div class="svc-card reveal" style="transition-delay:${(i*0.07).toFixed(2)}s">
+        <div class="svc-num">${s.num||''}</div>
+        <span class="svc-icon">${s.icon||''}</span>
+        <div class="svc-title">${s.title||''}</div>
+        <p class="svc-desc">${s.description||''}</p>
+        <div class="svc-tags">${(s.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      </div>`).join('');
+
+    // Stats
+    const statsInner = document.getElementById('statsInner');
+    statsInner.innerHTML = data.stats.map((s,i)=>`
+      <div class="reveal" style="transition-delay:${(i*0.08).toFixed(2)}s">
+        <div class="stat-n">${s.value}</div><div class="stat-l">${s.label}</div>
+      </div>`).join('');
+
+    // Work / projects
+    const workGrid = document.getElementById('workGrid');
+    workGrid.innerHTML = data.projects.map((p,i)=>`
+      <div class="work-card reveal" style="transition-delay:${(i*0.1).toFixed(2)}s">
+        <div class="wk-bg ${p.gradient_class||''}"><div class="wk-shape" style="${p.shape_style||''}"></div></div>
+        <div class="wk-info"><div class="wk-cat">${p.category||''}</div><div class="wk-name">${p.name||''}</div></div>
+      </div>`).join('');
+
+    // Testimonial (show first)
+    const testiInner = document.getElementById('testiInner');
+    if(data.testimonials.length){
+      const t = data.testimonials[0];
+      testiInner.innerHTML = `
+        <div class="testi-stars reveal">${'★ '.repeat(t.stars||5).trim()}</div>
+        <p class="testi-quote reveal">"${t.quote||''}"</p>
+        <p class="testi-author reveal">— ${t.author||''}</p>`;
+    }
+
+    initReveals();
+  }catch(err){
+    console.error('Could not load dynamic content, using static fallback.', err);
+  }
+}
+loadContent();
+
+// ---- contact form submission ----
+const contactForm = document.getElementById('contactForm');
+const cfMsg = document.getElementById('cfMsg');
+contactForm.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const email = document.getElementById('cfEmail').value.trim();
+  const message = document.getElementById('cfMessage').value.trim();
+  cfMsg.textContent = 'Sending…';
+  cfMsg.className = 'form-msg';
+  try{
+    const res = await fetch('/api/contact', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({email, message})
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || 'Something went wrong');
+    cfMsg.textContent = data.message || "Thanks — we'll be in touch soon.";
+    cfMsg.className = 'form-msg ok';
+    contactForm.reset();
+  }catch(err){
+    cfMsg.textContent = err.message;
+    cfMsg.className = 'form-msg err';
+  }
+});
+</script>
+</body>
+</html>
